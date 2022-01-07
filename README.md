@@ -1,31 +1,116 @@
-# Intezer App for Phantom
+[comment]: # "Auto-generated SOAR connector documentation"
+# Intezer Analyze
 
-## Intezer About
-Intezer has developed novel technology- the only solutions to apply biological immune system concepts to cyber security. Through its ‘DNA mapping’ approach to code, Intezer provides enterprises with unparalleled threat detection that accelerates incident response and eliminates false positives, while protecting against fileless malware, APTs, code tampering and vulnerable software.
+Publisher: Domenico Perre  
+Connector Version: 1\.1\.1  
+Product Vendor: Intezer  
+Product Name: Analyze  
+Product Version Supported (regex): "\.\*"  
+Minimum Product Version: 4\.2\.7532  
 
-## Overview
-This app provides a three actions that can be used in Phantom cyber
-- Detonate file
-- Get Report
-- File Reputation
+This app supports the investigate actions on the Intezer platform\. Intezer's technology enables your security team to go beyond behavioral analysis\. Its solutions diagnose every piece of code quickly and accurately with DNA mapping from Intezer\-an industry first enabling your team to address real threats immediately
 
-## Intezer Intezer App for Phantom Requirements
-Requires Phantom 3.5+
+### Configuration Variables
+The below configuration variables are required for this Connector to operate.  These variables are specified when configuring a Analyze asset in SOAR.
 
-### Installation
-1. Download the latest .tgz from https://github.com/secops4thewin/phintezeranalyze
-2. Logon to Phantom
-3. Click Apps
-4. Click Install Apps
-5. Select the tgz from Step 1 and click Install
-6. Click Unconfigured Apps and search for 'Intezer Analyze'
-7. Click Configure New Asset
-8. Fill out asset information
-9. Click Asset Settings, Enter API
-10. Click Save
-11. Click Test Connectivity
+VARIABLE | REQUIRED | TYPE | DESCRIPTION
+-------- | -------- | ---- | -----------
+**base\_url** |  required  | string | Base URL for API request
+**apiKey** |  required  | password | API Key for submitting samples
 
+### Supported Actions  
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using the supplied configuration  
+[detonate file](#action-detonate-file) - Run the file in the sandbox and retrieve the analysis results  
+[get report](#action-get-report) - Query for results of an already completed detonation  
+[file reputation](#action-file-reputation) - Queries for file info  
 
-## Release Notes
-- 1.0.0 Initial release with API functionality
-- 1.1.0 Replaced code inline with best practices
+## action: 'test connectivity'
+Validate the asset configuration for connectivity using the supplied configuration
+
+Type: **test**  
+Read only: **True**
+
+#### Action Parameters
+No parameters are required for this action
+
+#### Action Output
+No Output  
+
+## action: 'detonate file'
+Run the file in the sandbox and retrieve the analysis results
+
+Type: **investigate**  
+Read only: **True**
+
+#### Action Parameters
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**vault\_id** |  required  | Vault ID of file to detonate | string |  `pe file`  `pdf`  `flash`  `apk`  `jar`  `doc`  `xls`  `ppt` 
+**file\_name** |  optional  | Filename to use | string |  `file name` 
+
+#### Action Output
+DATA PATH | TYPE | CONTAINS
+--------- | ---- | --------
+action\_result\.status | string | 
+action\_result\.parameter\.file\_name | string |  `file name` 
+action\_result\.parameter\.vault\_id | string |  `pe file`  `pdf`  `flash`  `apk`  `jar`  `doc`  `xls`  `ppt` 
+action\_result\.data\.\*\.result\.analysis\_id | string |  `id` 
+action\_result\.data\.\*\.result\.analysis\_url | string | 
+action\_result\.data\.\*\.result\.sha256 | string |  `sha256` 
+action\_result\.data\.\*\.result\.sub\_verdict | string | 
+action\_result\.summary\.verdict | string | 
+action\_result\.message | string | 
+summary\.total\_objects | numeric | 
+summary\.total\_objects\_successful | numeric |   
+
+## action: 'get report'
+Query for results of an already completed detonation
+
+Type: **investigate**  
+Read only: **True**
+
+#### Action Parameters
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**id** |  required  | Detonation ID to get the report of | string | 
+
+#### Action Output
+DATA PATH | TYPE | CONTAINS
+--------- | ---- | --------
+action\_result\.status | string | 
+action\_result\.parameter\.id | string | 
+action\_result\.data\.\*\.result\.analysis\_id | string |  `id` 
+action\_result\.data\.\*\.result\.analysis\_url | string | 
+action\_result\.data\.\*\.result\.family | string | 
+action\_result\.data\.\*\.result\.sha256 | string |  `sha256` 
+action\_result\.data\.\*\.result\.sub\_verdict | string | 
+action\_result\.summary\.verdict | string | 
+action\_result\.message | string | 
+summary\.total\_objects | numeric | 
+summary\.total\_objects\_successful | numeric |   
+
+## action: 'file reputation'
+Queries for file info
+
+Type: **investigate**  
+Read only: **True**
+
+#### Action Parameters
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**hash** |  required  | File hash to query | string |  `hash`  `sha256`  `sha1`  `md5` 
+
+#### Action Output
+DATA PATH | TYPE | CONTAINS
+--------- | ---- | --------
+action\_result\.status | string | 
+action\_result\.parameter\.hash | string |  `hash`  `sha256`  `sha1`  `md5` 
+action\_result\.data\.\*\.result\.analysis\_id | string |  `id` 
+action\_result\.data\.\*\.result\.analysis\_url | string | 
+action\_result\.data\.\*\.result\.family | string | 
+action\_result\.data\.\*\.result\.sha256 | string |  `sha256` 
+action\_result\.data\.\*\.result\.sub\_verdict | string | 
+action\_result\.summary\.verdict | string | 
+action\_result\.message | string | 
+summary\.total\_objects | numeric | 
+summary\.total\_objects\_successful | numeric | 
